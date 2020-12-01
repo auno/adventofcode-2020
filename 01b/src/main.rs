@@ -1,6 +1,6 @@
 use std::io::{self, BufRead};
 
-fn find_sum(nums: &[i32], target: i32) -> i32 {
+fn find_product_matching_sum(nums: &[i32], target: i32) -> Option<i32> {
     for a in nums.iter() {
         for b in nums.iter() {
             if a + b > target {
@@ -9,7 +9,7 @@ fn find_sum(nums: &[i32], target: i32) -> i32 {
 
             for c in nums.iter().rev() {
                 if a + b + c == target {
-                    return a * b * c;
+                    return Some(a * b * c);
                 }
 
                 if a + b + c < target {
@@ -19,7 +19,7 @@ fn find_sum(nums: &[i32], target: i32) -> i32 {
         }
     }
 
-    return -1;
+    None
 }
 
 fn main() {
@@ -30,6 +30,6 @@ fn main() {
 
     nums.sort();
     let nums = nums;
-
-    println!("{}", find_sum(&nums, 2020));
+    let product = find_product_matching_sum(&nums, 2020).unwrap();
+    println!("{}", product);
 }
