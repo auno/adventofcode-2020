@@ -11,27 +11,23 @@ fn main() {
         .map(|n| n.parse().unwrap())
         .collect();
 
-    let mut previous_nums: HashMap<u32, Vec<u32>> = HashMap::new();
-    let mut turn: u32 = 0;
+    let mut previous_nums: HashMap<u32, u32> = HashMap::new();
+    let mut turn: u32 = 1;
 
-    for num in &input {
-        previous_nums.entry(*num).or_insert(Vec::new()).push(turn);
+    for num in &input[0..(input.len() - 1)] {
+        previous_nums.insert(*num, turn);
         turn += 1;
     }
 
     let mut last_num: u32 = *input.last().unwrap();
 
     while turn < 30000000 {
-        let last_num_history= previous_nums.get_mut(&last_num).unwrap();
-        if last_num_history.len() > 1 {
-            let a = last_num_history[last_num_history.len() - 2];
-            let b = last_num_history[last_num_history.len() - 1];
-
-            last_num = b - a;
-            previous_nums.entry(last_num).or_insert(Vec::new()).push(turn);
+        if let Some(last_num_turn) = previous_nums.get(&last_num).cloned() {
+            previous_nums.insert(last_num, turn);
+            last_num = (turn) - last_num_turn;
         } else {
+            previous_nums.insert(last_num, turn);
             last_num = 0;
-            previous_nums.entry(last_num).or_insert(Vec::new()).push(turn);
         }
 
         turn += 1;
